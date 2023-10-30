@@ -19,7 +19,7 @@ import java.net.URL;
 
 public class CurrencyInfo {
     public void getCurrencyRate(SendMessage message, UserCurrency userCurrency, BankURL currencyService, DecimalPlaces decimalPlaces)
-            throws IOException, ParseException, java.text.ParseException {
+            throws IOException, ParseException {
         URL url = currencyService.getBankURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

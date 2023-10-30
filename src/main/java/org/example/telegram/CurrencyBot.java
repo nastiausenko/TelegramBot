@@ -1,5 +1,6 @@
 package org.example.telegram;
 
+import org.apache.http.ParseException;
 import org.example.information.CurrencyInfo;
 import org.example.settings.BankURL;
 import org.example.settings.Buttons;
@@ -13,7 +14,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
