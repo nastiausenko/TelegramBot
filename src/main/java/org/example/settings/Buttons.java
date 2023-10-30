@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Buttons {
+    private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допопможе відслідковувати актуальні курси валют";
 
     public void startButtons(SendMessage message) {
-        message.setText("Ласкаво просимо. Цей бот допопможе відслідковувати актуальні курси валют");
+        message.setText(WELCOME_MESSAGE);
         attachButtons(message, Map.of(
                 "Отримати інфо\n", "get_info",
                 "Налаштування\n", "settings"
@@ -20,7 +21,6 @@ public class Buttons {
     }
 
     public void settingsButtons(SendMessage message) {
-        message.setText("Налаштування");
         attachButtons(message, Map.of(
                 "Кількість знаків після коми\n", "decimal_places",
                 "Банк\n", "bank",
@@ -29,17 +29,15 @@ public class Buttons {
         ));
     }
 
-    public void decimalPlacesButtons(SendMessage message) {
-        message.setText("Виберіть кількість знаків після коми");
+    public void decimalPlacesButtons(SendMessage message, int currentDecimalPlaces) {
         attachButtons(message, Map.of(
-                "2\n", "2",
-                "3\n", "3",
-                "4\n", "4"
+                (currentDecimalPlaces == 2 ? "2 ✅\n" : "2"), "2",
+                (currentDecimalPlaces == 3 ? "3 ✅\n" : "3"), "3",
+                (currentDecimalPlaces == 4 ? "4 ✅\n" : "4"), "4"
         ));
     }
 
     public void bankButtons(SendMessage message) {
-        message.setText("Виберіть банк");
         attachButtons(message, Map.of(
                 "НБУ\n", "nbu",
                 "ПриватБанк\n", "privatbank",
@@ -48,7 +46,6 @@ public class Buttons {
     }
 
     public void currencyButtons(SendMessage message) {
-        message.setText("Виберіть валюту");
         attachButtons(message, Map.of(
                 "EUR\n", "eur",
                 "USD\n", "usd"

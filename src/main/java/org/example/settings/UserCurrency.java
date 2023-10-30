@@ -1,5 +1,8 @@
 package org.example.settings;
 
+import lombok.Getter;
+
+@Getter
 public class UserCurrency {
     private int currencyCode;
     private String currencyName;
@@ -8,15 +11,10 @@ public class UserCurrency {
         this.currencyCode = 840;
         this.currencyName = "USD";
     }
-
-    public int getCurrencyCode() {
-        return currencyCode;
+    public UserCurrency(int currencyCode, String currencyName) {
+        this.currencyCode = currencyCode;
+        this.currencyName = currencyName;
     }
-
-    public String getCurrencyName() {
-        return currencyName;
-    }
-
     public void setCurrencyCode(int code, String name) {
         this.currencyCode = code;
         this.currencyName = name;
