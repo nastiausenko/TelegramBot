@@ -26,7 +26,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
     User user = new User();
     BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
-    CurrencyInfo info = new CurrencyInfo();
+    CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces);
 
     public CurrencyBot() throws MalformedURLException {
         bankURL.setBankURL(new URL("https://api.monobank.ua/bank/currency"));
@@ -102,7 +102,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
 
             if (update.getCallbackQuery().getData().equals("get_info")) {
                 try {
-                    info.getCurrencyRate(message, userCurrency, bankURL, decimalPlaces);
+                    info.getCurrencyRate(message);
                 } catch (IOException | ParseException e) {
                     throw new RuntimeException(e);
                 }

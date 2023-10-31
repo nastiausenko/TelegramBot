@@ -18,7 +18,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class CurrencyInfo {
-    public void getCurrencyRate(SendMessage message, UserCurrency userCurrency, BankURL currencyService, DecimalPlaces decimalPlaces)
+    private UserCurrency userCurrency;
+    private BankURL currencyService;
+    private DecimalPlaces decimalPlaces;
+
+    public CurrencyInfo(UserCurrency userCurrency, BankURL currencyService, DecimalPlaces decimalPlaces) {
+        this.userCurrency = userCurrency;
+        this.currencyService = currencyService;
+        this.decimalPlaces = decimalPlaces;
+    }
+
+    public void getCurrencyRate(SendMessage message)
             throws IOException, ParseException {
         URL url = currencyService.getBankURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -34,6 +44,7 @@ public class CurrencyInfo {
 
             JSONArray currencyRates = new JSONArray(result.toString());
             Bank bank;
+
             if (currencyService.isMonobank()) {
                 bank = new Monobank();
             } else if (currencyService.isPrivatbank()) {
