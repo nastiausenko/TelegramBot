@@ -13,15 +13,17 @@ public class BankURL {
         this.isPrivatbank = url.toString().contains("privatbank");
     }
     public URL getBankURL(){
+
         return url;
     }
 
     public boolean isMonobank() {
+
         return isMonobank;
     }
 
     public boolean isPrivatbank() {
+
         return isPrivatbank;
     }
-
 }
