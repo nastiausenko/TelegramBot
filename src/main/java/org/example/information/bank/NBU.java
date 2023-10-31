@@ -1,6 +1,5 @@
 package org.example.information.bank;
 
-//import org.example.information.model.NBUModel;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.json.JSONArray;
@@ -20,10 +19,6 @@ public class NBU implements Bank {
             String chosenCurrency = userCurrency.getCurrencyName();
 
             if (cc.equals(chosenCurrency)) {
-//                NBUModel nbuModel = new NBUModel();
-//                nbuModel.setCc(cc);
-//                nbuModel.setRate(currencyObject.getFloat("rate"));
-//                nbuModel.setExchangedate(parseNBUDate(currencyObject.getString("exchangedate")));
 
                 String formattedRate = String.format("%." + decimalPlaces.getDecimalPlaces() + "f",
                         currencyObject.getFloat("rate"));
