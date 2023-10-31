@@ -19,26 +19,20 @@ public class Monobank implements Bank {
             int chosenCurrencyCode = userCurrency.getCurrencyCode();
 
             if (currencyCodeA == chosenCurrencyCode && currencyCodeB == 980) {
-
-
                 String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("rateBuy"));
                 String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("rateSell"));
 
                 message.setText("Базова валюта: UAH\n" +
                         "Валюта угоди: " + userCurrency.getCurrencyName() + "\n" +
-                        "Дата: " + getFormatDate(new Date(currencyObject.getLong("date") * 1000L)) + "\n" +
+                        "Дата: " + getFormatDate(currencyObject) + "\n" +
                         "Купівля: " + formattedRateBuy + "\n" +
                         "Продаж: " + formattedRateSell);
             }
         }
-
-
-
-
-
     }
 
-    private static String getFormatDate(Date model) {
-        return new SimpleDateFormat("dd MMM yyyy").format(model.getDate());
+    private static String getFormatDate(JSONObject model) {
+        long timestamp = model.getLong("date") * 1000L;
+        return new SimpleDateFormat("dd MMM yyyy").format(new Date(timestamp));
     }
 }
