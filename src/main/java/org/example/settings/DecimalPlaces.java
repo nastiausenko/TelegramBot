@@ -1,5 +1,9 @@
 package org.example.settings;
 
+import lombok.Getter;
+
+
+@Getter
 public class DecimalPlaces {
     private int decimalPlaces;
     private String message;
@@ -16,14 +20,4 @@ public class DecimalPlaces {
     public void setDecimalPlaces(int decimalPlaces) {
         this.decimalPlaces = decimalPlaces;
     }
-
-    public int getDecimalPlaces() {
-        return decimalPlaces;
-    }
-
-    public String getMessage(){
-        return message;
-    }
-
-
 }
