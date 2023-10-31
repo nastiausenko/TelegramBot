@@ -42,7 +42,6 @@ public class CurrencyBot extends TelegramLongPollingBot {
         return Constants.BOT_TOKEN;
     }
 
-
     @Override
     public void onUpdateReceived(Update update) {
         Long chatID = getChatId(update);
@@ -128,5 +127,4 @@ public class CurrencyBot extends TelegramLongPollingBot {
         message.setText(text);
         sendApiMethodAsync(message);
     }
-
 }

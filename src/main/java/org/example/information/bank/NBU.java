@@ -19,7 +19,6 @@ public class NBU implements Bank {
             String chosenCurrency = userCurrency.getCurrencyName();
 
             if (cc.equals(chosenCurrency)) {
-
                 String formattedRate = String.format("%." + decimalPlaces.getDecimalPlaces() + "f",
                         currencyObject.getFloat("rate"));
 
