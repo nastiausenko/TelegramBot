@@ -10,17 +10,20 @@ import java.util.List;
 
 
 public class Buttons {
-    private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допопможе відслідковувати актуальні курси валют";
+
+    private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют";
     List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+
     public void startButtons(SendMessage message) {
+
         message.setText(WELCOME_MESSAGE);
+
         buttons.add(List.of(createButton("Отримати інфо", "get_info",false)));
         buttons.add(List.of(createButton("Налаштування", "settings", false)));
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
 
         message.setReplyMarkup(markup);
-
     }
 
     public void settingsButtons(SendMessage message) {
