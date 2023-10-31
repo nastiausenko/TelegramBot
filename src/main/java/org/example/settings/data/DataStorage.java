@@ -14,7 +14,6 @@ public class DataStorage {
     private Map<String, UserCurrency> currencies = new HashMap<>();
 
     public DataStorage() {
-        // Ініціалізуйте ваші мапи тут
         callbackActions.put("settings", new SettingsCallback());
         callbackActions.put("decimal_places", new DecimalPlacesCallback());
         callbackActions.put("bank", new BankCallBack());
