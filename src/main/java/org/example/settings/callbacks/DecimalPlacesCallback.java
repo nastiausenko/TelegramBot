@@ -11,7 +11,6 @@ public class DecimalPlacesCallback implements CallbackActions {
     public void execute(SendMessage message, Long chatID, CurrencyBot bot, User user) {
         message.setChatId(chatID);
         Buttons buttons = new Buttons();
-        DecimalPlaces decimalPlaces = new DecimalPlaces();
         buttons.decimalPlacesButtons(message, user);
         bot.sendMessage(chatID, "Виберіть кількість знаків після коми", message);
     }

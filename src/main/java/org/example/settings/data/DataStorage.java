@@ -1,5 +1,6 @@
 package org.example.settings.data;
 
+import lombok.Getter;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.example.settings.callbacks.*;
@@ -7,11 +8,12 @@ import org.example.settings.callbacks.*;
 import java.util.Map;
 import java.util.HashMap;
 
+@Getter
 public class DataStorage {
-    private Map<String, CallbackActions> callbackActions = new HashMap<>();
-    private Map<String, String> bankUrls = new HashMap<>();
-    private Map<String, DecimalPlaces> numberDecimalPlaces = new HashMap<>();
-    private Map<String, UserCurrency> currencies = new HashMap<>();
+    private final Map<String, CallbackActions> callbackActions = new HashMap<>();
+    private final Map<String, String> bankUrls = new HashMap<>();
+    private final Map<String, DecimalPlaces> numberDecimalPlaces = new HashMap<>();
+    private final Map<String, UserCurrency> currencies = new HashMap<>();
 
     public DataStorage() {
         callbackActions.put("settings", new SettingsCallback());
@@ -30,22 +32,6 @@ public class DataStorage {
 
         currencies.put("usd", new UserCurrency(840, "USD"));
         currencies.put("eur", new UserCurrency(978, "EUR"));
-    }
-
-    public Map<String, CallbackActions> getCallbackActions() {
-        return callbackActions;
-    }
-
-    public Map<String, String> getBankUrls() {
-        return bankUrls;
-    }
-
-    public Map<String, DecimalPlaces> getNumberDecimalPlaces() {
-        return numberDecimalPlaces;
-    }
-
-    public Map<String, UserCurrency> getCurrencies() {
-        return currencies;
     }
 }
 

@@ -16,8 +16,6 @@ public class Privatbank implements Bank {
             String chosenCurrency = userCurrency.getCurrencyName();
 
             if (ccy.equals(chosenCurrency)) {
-
-
                 String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("buy"));
                 String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("sale"));
 

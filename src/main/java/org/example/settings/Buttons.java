@@ -69,8 +69,6 @@ public class Buttons {
 
     }
 
-
-
     public void currencyButtons(SendMessage message, User user) {
         buttons.add(List.of(createButton("EUR", "eur", "eur".equals(user.getCurrency()))));
         buttons.add(List.of(createButton("USD", "usd", "usd".equals(user.getCurrency()))));

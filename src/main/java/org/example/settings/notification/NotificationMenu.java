@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 public class NotificationMenu {
 
-    private List<String> notificationTimes = Arrays.asList(
+    private final List<String> notificationTimes = Arrays.asList(
             "9", "10", "11",
             "12", "13", "14",
             "15", "16", "17",
-            "18", "Вимкнути сповіщення");
+            "21", "Вимкнути сповіщення");
 
     public void buildTimeMenu(SendMessage message) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
