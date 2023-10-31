@@ -2,16 +2,17 @@ package org.example.settings.callbacks;
 
 import org.example.settings.Buttons;
 import org.example.settings.DecimalPlaces;
+import org.example.settings.data.User;
 import org.example.telegram.CurrencyBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class DecimalPlacesCallback implements CallbackActions {
     @Override
-    public void execute(SendMessage message, Long chatID, CurrencyBot bot) {
+    public void execute(SendMessage message, Long chatID, CurrencyBot bot, User user) {
         message.setChatId(chatID);
         Buttons buttons = new Buttons();
         DecimalPlaces decimalPlaces = new DecimalPlaces();
-        buttons.decimalPlacesButtons(message, decimalPlaces.getDecimalPlaces());
+        buttons.decimalPlacesButtons(message, user);
         bot.sendMessage(chatID, "Виберіть кількість знаків після коми", message);
     }
 }

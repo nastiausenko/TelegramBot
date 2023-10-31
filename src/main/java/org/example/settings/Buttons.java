@@ -1,74 +1,95 @@
 package org.example.settings;
 
+import org.example.settings.data.User;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public class Buttons {
+
     private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют";
+    List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
     public void startButtons(SendMessage message) {
 
         message.setText(WELCOME_MESSAGE);
-      
-        attachButtons(message, Map.of(
-                "Отримати інфо\n", "get_info",
-                "Налаштування\n", "settings"
-        ));
+
+        buttons.add(List.of(createButton("Отримати інфо", "get_info",false)));
+        buttons.add(List.of(createButton("Налаштування", "settings", false)));
+
+        InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
+
+        message.setReplyMarkup(markup);
     }
 
     public void settingsButtons(SendMessage message) {
-        attachButtons(message, Map.of(
-                "Кількість знаків після коми\n", "decimal_places",
-                "Банк\n", "bank",
-                "Валюти\n", "currency",
-                "Час сповіщень\n", "notification"
-        ));
+
+        buttons.add(List.of(createButton("Кількість знаків після коми", "decimal_places",false)));
+        buttons.add(List.of(createButton("Банк", "bank", false)));
+        buttons.add(List.of(createButton("Валюти", "currency", false)));
+        buttons.add(List.of(createButton("Час сповіщень", "notification", false)));
+
+
+        InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
+
+        message.setReplyMarkup(markup);
+
     }
 
-    public void decimalPlacesButtons(SendMessage message, int currentDecimalPlaces) {
-        attachButtons(message, Map.of(
-                (currentDecimalPlaces == 2 ? "2 ✅\n" : "2"), "2",
-                (currentDecimalPlaces == 3 ? "3 ✅\n" : "3"), "3",
-                (currentDecimalPlaces == 4 ? "4 ✅\n" : "4"), "4"
-        ));
+    public void decimalPlacesButtons(SendMessage message, User user) {
+        buttons.add(List.of(createButton("2", "2",
+                "2".equals(Integer.toString(user.getDecimalPlaces())))));
+        buttons.add(List.of(createButton("3", "3",
+                "3".equals(Integer.toString(user.getDecimalPlaces())))));
+        buttons.add(List.of(createButton("4", "4",
+                "4".equals(Integer.toString(user.getDecimalPlaces())))));
+
+
+        InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
+
+        message.setText("Виберіть банк:");
+        message.setReplyMarkup(markup);
+
     }
 
-    public void bankButtons(SendMessage message) {
-        attachButtons(message, Map.of(
-                "НБУ\n", "nbu",
-                "ПриватБанк\n", "privatbank",
-                "Монобанк\n", "monobank"
-        ));
+    public void bankButtons(SendMessage message, User user) {
+        buttons.add(List.of(createButton("НБУ", "nbu", "nbu".equals(user.getBank()))));
+        buttons.add(List.of(createButton("ПриватБанк", "privatbank", "privatbank".equals(user.getBank()))));
+        buttons.add(List.of(createButton("Монобанк", "monobank", "monobank".equals(user.getBank()))));
+
+
+        InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
+
+        message.setText("Виберіть банк:");
+        message.setReplyMarkup(markup);
+
     }
 
-    public void currencyButtons(SendMessage message) {
-        attachButtons(message, Map.of(
-                "EUR\n", "eur",
-                "USD\n", "usd"
-        ));
+
+
+    public void currencyButtons(SendMessage message, User user) {
+        buttons.add(List.of(createButton("EUR", "eur", "eur".equals(user.getCurrency()))));
+        buttons.add(List.of(createButton("USD", "usd", "usd".equals(user.getCurrency()))));
+
+        InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
+        message.setReplyMarkup(markup);
+
     }
 
-    private void attachButtons(SendMessage message, Map<String, String> buttons) {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+    private InlineKeyboardButton createButton(String text, String callbackData, boolean checked) {
+        InlineKeyboardButton button = new InlineKeyboardButton();
+        button.setCallbackData(callbackData);
 
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-
-        for (String buttonName: buttons.keySet()) {
-            String buttonValue = buttons.get(buttonName);
-
-            InlineKeyboardButton button = new InlineKeyboardButton();
-            button.setText(new String(buttonName.getBytes(), StandardCharsets.UTF_8));
-            button.setCallbackData(buttonValue);
-            keyboard.add(List.of(button));
+        if (checked) {
+            button.setText("✅ " + text);
+        } else {
+            button.setText(text);
         }
 
-        markup.setKeyboard(keyboard);
-        message.setReplyMarkup(markup);
+        return button;
     }
 }

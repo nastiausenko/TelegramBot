@@ -2,11 +2,11 @@ package org.example.telegram;
 
 import org.apache.http.ParseException;
 import org.example.information.CurrencyInfo;
-import org.example.settings.BankURL;
-import org.example.settings.Buttons;
-import org.example.settings.DecimalPlaces;
-import org.example.settings.UserCurrency;
+import org.example.settings.*;
 import org.example.settings.callbacks.*;
+import org.example.settings.data.DataStorage;
+import org.example.settings.data.User;
+import org.example.settings.notification.NotificationMenu;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,40 +14,22 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 public class CurrencyBot extends TelegramLongPollingBot {
     Buttons buttons = new Buttons();
-    Map<String, CallbackActions> callbackActions = new HashMap<>();
-    Map<String, String> bankUrls = new HashMap<>();
-    Map<String, DecimalPlaces> numberDecimalPlaces = new HashMap<>();
-    Map<String, UserCurrency> currencies = new HashMap<>();
-
+    DataStorage dataStorage = new DataStorage();
+    NotificationMenu menu = new NotificationMenu();
+    List<String> time = menu.getNotificationTimes();
     UserCurrency userCurrency = new UserCurrency();
-    BankURL bankService = new BankURL();
+    User user = new User();
+    BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
     CurrencyInfo info = new CurrencyInfo();
 
     public CurrencyBot() throws MalformedURLException {
-        bankService.setBankURL(new URL("https://api.monobank.ua/bank/currency"));
-        callbackActions.put("settings", new SettingsCallback());
-        callbackActions.put("decimal_places", new DecimalPlacesCallback());
-        callbackActions.put("bank", new BankCallBack());
-        callbackActions.put("notification", new NotificationCallback());
-        callbackActions.put("currency", new CurrencyCallback());
-
-        bankUrls.put("monobank", "https://api.monobank.ua/bank/currency");
-        bankUrls.put("privatbank", "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11");
-        bankUrls.put("nbu", "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json");
-
-        numberDecimalPlaces.put("2", new DecimalPlaces(2, "Встановлено 2 знаки після коми"));
-        numberDecimalPlaces.put("3", new DecimalPlaces(3, "Встановлено 3 знаки після коми"));
-        numberDecimalPlaces.put("4", new DecimalPlaces(4, "Встановлено 4 знаки після коми"));
-
-        currencies.put("usd", new UserCurrency(840, "USD"));
-        currencies.put("eur", new UserCurrency(978, "EUR"));
+        bankURL.setBankURL(new URL("https://api.monobank.ua/bank/currency"));
     }
 
     @Override
@@ -66,7 +48,6 @@ public class CurrencyBot extends TelegramLongPollingBot {
         Long chatID = getChatId(update);
         SendMessage message = new SendMessage();
 
-
         if (update.hasMessage() && update.getMessage().getText().equals("/start")) {
             message.setChatId(chatID);
             buttons.startButtons(message);
@@ -74,21 +55,31 @@ public class CurrencyBot extends TelegramLongPollingBot {
         }
 
         if (update.hasCallbackQuery()) {
+            String callbackData = update.getCallbackQuery().getData();
+
+            Map<String, CallbackActions> callbackActions = dataStorage.getCallbackActions();
+            Map<String, String> bankUrls = dataStorage.getBankUrls();
+            Map<String, DecimalPlaces> numberDecimalPlaces = dataStorage.getNumberDecimalPlaces();
+            Map<String, UserCurrency> currencies = dataStorage.getCurrencies();
+
+            if (time.contains(callbackData)) {
+                sendMessage(chatID, "Час сповіщень встановлено на " + callbackData, message);
+            }
 
             if (update.getCallbackQuery() != null) {
-                String callbackData = update.getCallbackQuery().getData();
                 CallbackActions action = callbackActions.get(callbackData);
                 String bankUrl = bankUrls.get(callbackData);
                 DecimalPlaces data = numberDecimalPlaces.get(callbackData);
                 UserCurrency selectedCurrency = currencies.get(callbackData);
 
                 if (action != null) {
-                    action.execute(message, chatID, this);
+                    action.execute(message, chatID, this, user);
                 }
 
-                if (bankUrl != null) {
+                if (bankUrls.containsKey(callbackData)) {
+                    user.setBank(callbackData);
                     try {
-                        bankService.setBankURL(new URL(bankUrl));
+                        bankURL.setBankURL(new URL(bankUrl));
                         sendMessage(chatID, "Встановлено " + callbackData, message);
                     } catch (MalformedURLException e) {
                         throw new RuntimeException(e);
@@ -96,12 +87,14 @@ public class CurrencyBot extends TelegramLongPollingBot {
                 }
 
                 if (data != null) {
-                    int newDecimalPlaces = data.getDecimalPlaces();
+                    int newDecimalPlaces = Integer.parseInt(callbackData);
+                    user.setDecimalPlaces(newDecimalPlaces);
                     decimalPlaces.setDecimalPlaces(newDecimalPlaces);
                     sendMessage(chatID, data.getMessage(), message);
                 }
 
                 if (selectedCurrency != null) {
+                    user.setCurrency(callbackData);
                     userCurrency.setCurrencyCode(selectedCurrency.getCurrencyCode(), selectedCurrency.getCurrencyName());
                     sendMessage(chatID, "Встановлено " + selectedCurrency.getCurrencyName(), message);
                 }
@@ -109,7 +102,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
 
             if (update.getCallbackQuery().getData().equals("get_info")) {
                 try {
-                    info.getCurrencyRate(message, userCurrency, bankService, decimalPlaces);
+                    info.getCurrencyRate(message, userCurrency, bankURL, decimalPlaces);
                 } catch (IOException | ParseException e) {
                     throw new RuntimeException(e);
                 }

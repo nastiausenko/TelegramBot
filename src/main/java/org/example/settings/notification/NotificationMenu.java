@@ -1,47 +1,45 @@
 package org.example.settings.notification;
 
+import lombok.Getter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class NotificationMenu {
+
+    private List<String> notificationTimes = Arrays.asList(
+            "9", "10", "11",
+            "12", "13", "14",
+            "15", "16", "17",
+            "18", "Вимкнути сповіщення");
+
     public void buildTimeMenu(SendMessage message) {
-        message.setText("Виберіть час сповіщень");
-        List<KeyboardRow> keyboard = getKeyboardRows();
+        List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        ReplyKeyboardMarkup replyKeyboardMarkup = ReplyKeyboardMarkup.builder()
-                .keyboard(keyboard)
-                .selective(true)
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .build();
+        for (String time : notificationTimes) {
+            buttons.add(createTimeButton(time));
+        }
 
-        message.setReplyMarkup(replyKeyboardMarkup);
-    }
+            List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+            for (int i = 0; i < buttons.size(); i += 3) {
+                keyboard.add(buttons.subList(i, Math.min(i + 3, buttons.size())));
+            }
 
-    private static List<KeyboardRow> getKeyboardRows() {
-        KeyboardRow row1 = new KeyboardRow();
-        KeyboardRow row2 = new KeyboardRow();
-        KeyboardRow row3 = new KeyboardRow();
-        KeyboardRow row4 = new KeyboardRow();
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+        }
 
-        row1.add("9.00");
-        row1.add("10.00");
-        row1.add("11.00");
+        private InlineKeyboardButton createTimeButton(String time) {
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            button.setText(time);
+            button.setCallbackData(time);
+            return button;
+        }
 
-        row2.add("12.00");
-        row2.add("13.00");
-        row2.add("14.00");
-
-        row3.add("15.00");
-        row3.add("16.00");
-        row3.add("17.00");
-
-        row4.add("18.00");
-        row4.add("Вимкнути сповіщення");
-
-        return List.of(row1, row2, row3, row4);
-    }
 }
