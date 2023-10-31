@@ -12,7 +12,7 @@ import java.util.Map;
 public class Buttons {
 
     public void startButtons(SendMessage message) {
-        message.setText("Ласкаво просимо. Цей бот допопможе відслідковувати актуальні курси валют");
+        message.setText("Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют");
         attachButtons(message, Map.of(
                 "Отримати інфо\n", "get_info",
                 "Налаштування\n", "settings"
