@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Buttons {
-    private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допопможе відслідковувати актуальні курси валют";
+    private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют";
 
     public void startButtons(SendMessage message) {
+
         message.setText(WELCOME_MESSAGE);
+      
         attachButtons(message, Map.of(
                 "Отримати інфо\n", "get_info",
                 "Налаштування\n", "settings"
