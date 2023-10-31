@@ -1,6 +1,6 @@
 package org.example.information.bank;
 
-import org.example.information.model.PrivatBankModel;
+//import org.example.information.model.PrivatBankModel;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.json.JSONArray;
@@ -14,18 +14,18 @@ public class Privatbank implements Bank {
         for (int i = 0; i < currencyData.length(); i++) {
             JSONObject currencyObject = currencyData.getJSONObject(i);
             String ccy = currencyObject.getString("ccy");
-            String base_ccy = currencyObject.getString("base_ccy");
+//            String base_ccy = currencyObject.getString("base_ccy");
             String chosenCurrency = userCurrency.getCurrencyName();
 
             if (ccy.equals(chosenCurrency)) {
-                PrivatBankModel privatBankModel = new PrivatBankModel();
-                privatBankModel.setCcy(ccy);
-                privatBankModel.setBase_ccy(base_ccy);
-                privatBankModel.setBuy(currencyObject.getFloat("buy"));
-                privatBankModel.setSale(currencyObject.getFloat("sale"));
+//                PrivatBankModel privatBankModel = new PrivatBankModel();
+//                privatBankModel.setCcy(ccy);
+//                privatBankModel.setBase_ccy(base_ccy);
+//                privatBankModel.setBuy(currencyObject.getFloat("buy"));
+//                privatBankModel.setSale(currencyObject.getFloat("sale"));
 
-                String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", privatBankModel.getBuy());
-                String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", privatBankModel.getSale());
+                String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("buy"));
+                String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("sale"));
 
                 message.setText("Базова валюта: UAH\n" +
                         "Валюта угоди: " + userCurrency.getCurrencyName() + "\n" +

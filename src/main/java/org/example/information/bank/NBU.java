@@ -1,6 +1,6 @@
 package org.example.information.bank;
 
-import org.example.information.model.NBUModel;
+//import org.example.information.model.NBUModel;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.json.JSONArray;
@@ -20,16 +20,17 @@ public class NBU implements Bank {
             String chosenCurrency = userCurrency.getCurrencyName();
 
             if (cc.equals(chosenCurrency)) {
-                NBUModel nbuModel = new NBUModel();
-                nbuModel.setCc(cc);
-                nbuModel.setRate(currencyObject.getFloat("rate"));
-                nbuModel.setExchangedate(parseNBUDate(currencyObject.getString("exchangedate")));
+//                NBUModel nbuModel = new NBUModel();
+//                nbuModel.setCc(cc);
+//                nbuModel.setRate(currencyObject.getFloat("rate"));
+//                nbuModel.setExchangedate(parseNBUDate(currencyObject.getString("exchangedate")));
 
-                String formattedRate = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", nbuModel.getRate());
+                String formattedRate = String.format("%." + decimalPlaces.getDecimalPlaces() + "f",
+                        currencyObject.getFloat("rate"));
 
                 message.setText("Базова валюта: UAH\n" +
                         "Валюта угоди: " + userCurrency.getCurrencyName() + "\n" +
-                        "Дата: " + getFormatDate(nbuModel) + "\n" +
+                        "Дата: " + getFormatDate(parseNBUDate(currencyObject.getString("exchangedate"))) + "\n" +
                         "Курс: " + formattedRate);
             }
         }
@@ -44,8 +45,8 @@ public class NBU implements Bank {
         }
     }
 
-    private static String getFormatDate(NBUModel nbumodel) {
+    private static String getFormatDate(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy");
-        return format.format(nbumodel.getExchangedate());
+        return format.format(date);
     }
 }

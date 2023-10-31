@@ -1,6 +1,6 @@
 package org.example.information.bank;
 
-import org.example.information.model.MonobankModel;
+//import org.example.information.model.MonobankModel;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.json.JSONArray;
@@ -20,26 +20,31 @@ public class Monobank implements Bank {
             int chosenCurrencyCode = userCurrency.getCurrencyCode();
 
             if (currencyCodeA == chosenCurrencyCode && currencyCodeB == 980) {
-                MonobankModel model = new MonobankModel();
-                model.setCurrencyCodeA(currencyCodeA);
-                model.setCurrencyCodeB(currencyObject.getInt("currencyCodeB"));
-                model.setDate(new Date(currencyObject.getLong("date") * 1000L));
-                model.setRateSell(currencyObject.getFloat("rateSell"));
-                model.setRateBuy(currencyObject.getFloat("rateBuy"));
+//                MonobankModel model = new MonobankModel();
+//                model.setCurrencyCodeA(currencyCodeA);
+//                model.setCurrencyCodeB(currencyObject.getInt("currencyCodeB"));
+//                model.setDate(new Date(currencyObject.getLong("date") * 1000L));
+//                model.setRateSell(currencyObject.getFloat("rateSell"));
+//                model.setRateBuy(currencyObject.getFloat("rateBuy"));
 
-                String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", model.getRateBuy());
-                String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", model.getRateSell());
+                String formattedRateBuy = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("rateBuy"));
+                String formattedRateSell = String.format("%." + decimalPlaces.getDecimalPlaces() + "f", currencyObject.getFloat("rateSell"));
 
                 message.setText("Базова валюта: UAH\n" +
                         "Валюта угоди: " + userCurrency.getCurrencyName() + "\n" +
-                        "Дата: " + getFormatDate(model) + "\n" +
+                        "Дата: " + getFormatDate(new Date(currencyObject.getLong("date") * 1000L)) + "\n" +
                         "Купівля: " + formattedRateBuy + "\n" +
                         "Продаж: " + formattedRateSell);
             }
         }
+
+
+
+
+
     }
 
-    private static String getFormatDate(MonobankModel model) {
+    private static String getFormatDate(Date model) {
         return new SimpleDateFormat("dd MMM yyyy").format(model.getDate());
     }
 }

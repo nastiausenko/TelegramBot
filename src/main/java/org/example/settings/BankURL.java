@@ -15,18 +15,22 @@ public class BankURL {
         this.isNBU = url.toString().contains("NBU");
     }
     public URL getBankURL(){
+
         return url;
     }
 
     public boolean isMonobank() {
+
         return isMonobank;
     }
 
     public boolean isPrivatbank() {
+
         return isPrivatbank;
     }
 
     public boolean isNBU() {
+
         return isNBU;
     }
 }
