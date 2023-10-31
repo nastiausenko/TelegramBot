@@ -1,8 +1,6 @@
 package org.example.settings.data;
 
 import lombok.Getter;
-import org.example.information.CurrencyInfo;
-
 
 @Getter
 public class User {
