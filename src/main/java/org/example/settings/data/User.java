@@ -10,6 +10,7 @@ public class User {
     @Getter
     private int time = 9;
 
+
     public void setTime(Integer time) {
         this.time = time;
     }

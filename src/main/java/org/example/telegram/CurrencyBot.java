@@ -6,7 +6,9 @@ import org.example.settings.*;
 import org.example.settings.callbacks.*;
 import org.example.settings.data.DataStorage;
 import org.example.settings.data.User;
+import org.example.settings.notification.Notification;
 import org.example.settings.notification.NotificationMenu;
+import org.quartz.SchedulerException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -23,13 +25,14 @@ public class CurrencyBot extends TelegramLongPollingBot {
     NotificationMenu menu = new NotificationMenu();
     List<String> time = menu.getNotificationTimes();
     UserCurrency userCurrency = new UserCurrency();
-    User user = new User();
     BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
+    User user = new User();
     CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces, this);
-
-    public CurrencyBot() throws MalformedURLException {
+    private Notification notification;
+    public CurrencyBot() throws MalformedURLException, SchedulerException {
         bankURL.setBankURL(new URL("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"));
+        notification = new Notification();
     }
 
     @Override
@@ -63,12 +66,22 @@ public class CurrencyBot extends TelegramLongPollingBot {
 
             if (time.contains(callbackData)) {
                 if (callbackData.equals("Вимкнути сповіщення")){
-                    //turn off notification
+                    try {
+                        notification.Stop();
+                    } catch (SchedulerException e) {
+                        throw new RuntimeException(e);
+                    }
                     sendMessage(chatID, "Сповіщення вимкнено", message);
                 } else {
-                    user.setTime(Integer.parseInt(callbackData));
+                    int selectedTime = Integer.parseInt(callbackData);
+                    user.setTime(selectedTime);
                     sendMessage(chatID, "Час сповіщень встановлено на " + callbackData, message);
-                    //notification realization
+                    try {
+                        notification.Start(Integer.parseInt(callbackData));
+                    } catch (SchedulerException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
 
@@ -96,7 +109,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
                     int newDecimalPlaces = Integer.parseInt(callbackData);
                     user.setDecimalPlaces(newDecimalPlaces);
                     decimalPlaces.setDecimalPlaces(newDecimalPlaces);
-                    sendMessage(chatID, data.getMessage(), message);
+                    sendMessage(chatID, "Встановлено " + decimalPlaces.getDecimalPlaces(), message);
                 }
 
                 if (selectedCurrency != null) {

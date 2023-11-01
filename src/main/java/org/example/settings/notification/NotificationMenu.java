@@ -17,7 +17,7 @@ public class NotificationMenu {
             "9", "10", "11",
             "12", "13", "14",
             "15", "16", "17",
-            "21", "Вимкнути сповіщення");
+            "23", "Вимкнути сповіщення");
 
     public void buildTimeMenu(SendMessage message, User user) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
