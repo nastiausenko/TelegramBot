@@ -8,6 +8,7 @@ import org.example.information.bank.Privatbank;
 import org.example.settings.BankURL;
 import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
+import org.example.telegram.CurrencyBot;
 import org.json.JSONArray;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -19,18 +20,20 @@ import java.net.URL;
 
 public class CurrencyInfo {
     private UserCurrency userCurrency;
-    private BankURL currencyService;
+    private BankURL bankURL;
     private DecimalPlaces decimalPlaces;
+    private CurrencyBot bot;
 
-    public CurrencyInfo(UserCurrency userCurrency, BankURL currencyService, DecimalPlaces decimalPlaces) {
+    public CurrencyInfo(UserCurrency userCurrency, BankURL currencyService, DecimalPlaces decimalPlaces, CurrencyBot bot) {
         this.userCurrency = userCurrency;
-        this.currencyService = currencyService;
+        this.bankURL = currencyService;
         this.decimalPlaces = decimalPlaces;
+        this.bot = bot;
     }
 
-    public void getCurrencyRate(SendMessage message)
+    public void getCurrencyRate(SendMessage message, Long chatID)
             throws IOException, ParseException {
-        URL url = currencyService.getBankURL();
+        URL url = bankURL.getBankURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
@@ -45,15 +48,16 @@ public class CurrencyInfo {
             JSONArray currencyRates = new JSONArray(result.toString());
             Bank bank;
 
-            if (currencyService.isMonobank()) {
+            if (bankURL.isMonobank()) {
                 bank = new Monobank();
-            } else if (currencyService.isPrivatbank()) {
+            } else if (bankURL.isPrivatbank()) {
                 bank = new Privatbank();
             } else {
                 bank = new NBU();
             }
 
             bank.processCurrencyData(currencyRates, message, userCurrency, decimalPlaces);
+            bot.sendMessage(chatID, message.getText(), message);
         }
     }
 }
