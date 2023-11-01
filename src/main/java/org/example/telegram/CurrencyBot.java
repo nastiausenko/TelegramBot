@@ -26,10 +26,10 @@ public class CurrencyBot extends TelegramLongPollingBot {
     User user = new User();
     BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
-    CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces, this);
+    CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces);
 
     public CurrencyBot() throws MalformedURLException {
-        bankURL.setBankURL(new URL("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"));
+        bankURL.setBankURL(new URL("https://api.monobank.ua/bank/currency"));
     }
 
     @Override
@@ -62,14 +62,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
             Map<String, UserCurrency> currencies = dataStorage.getCurrencies();
 
             if (time.contains(callbackData)) {
-                if (callbackData.equals("Вимкнути сповіщення")){
-                    //turn off notification
-                    sendMessage(chatID, "Сповіщення вимкнено", message);
-                } else {
-                    user.setTime(Integer.parseInt(callbackData));
-                    sendMessage(chatID, "Час сповіщень встановлено на " + callbackData, message);
-                    //notification realization
-                }
+                sendMessage(chatID, "Час сповіщень встановлено на " + callbackData, message);
             }
 
             if (update.getCallbackQuery() != null) {
@@ -104,13 +97,16 @@ public class CurrencyBot extends TelegramLongPollingBot {
                     userCurrency.setCurrencyCode(selectedCurrency.getCurrencyCode(), selectedCurrency.getCurrencyName());
                     sendMessage(chatID, "Встановлено " + selectedCurrency.getCurrencyName(), message);
                 }
-                if (update.getCallbackQuery().getData().equals("get_info")) {
-                    try {
-                        info.getCurrencyRate(message, chatID);
-                    } catch (IOException | ParseException e) {
-                        throw new RuntimeException(e);
-                    }
+            }
+
+            if (update.getCallbackQuery().getData().equals("get_info")) {
+                try {
+                    info.getCurrencyRate(message);
+                } catch (IOException | ParseException e) {
+                    throw new RuntimeException(e);
                 }
+                message.setChatId(chatID);
+                sendApiMethodAsync(message);
             }
         }
     }

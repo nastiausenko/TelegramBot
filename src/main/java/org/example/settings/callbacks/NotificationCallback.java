@@ -10,7 +10,7 @@ public class NotificationCallback implements CallbackActions {
     public void execute(SendMessage message, Long chatID, CurrencyBot bot, User user) {
         message.setChatId(chatID);
         NotificationMenu menu = new NotificationMenu();
-        menu.buildTimeMenu(message, user);
+        menu.buildTimeMenu(message);
         bot.sendMessage(chatID, "Виберіть час сповіщень", message);
     }
 }
