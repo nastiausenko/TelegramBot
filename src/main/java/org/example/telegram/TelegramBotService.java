@@ -1,5 +1,6 @@
 package org.example.telegram;
 
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -21,7 +22,7 @@ public class TelegramBotService {
             telegramBotsApi.registerBot(new CurrencyBot());
         } catch (TelegramApiRequestException e) {
             log.error("Failed to register bot(check internet connection / bot token or make sure only one instance of bot is running).", e);
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | SchedulerException e) {
             throw new RuntimeException(e);
         }
         log.info("Telegram bot is ready to accept updates from user......");

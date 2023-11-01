@@ -12,9 +12,8 @@ public class DecimalPlaces {
         this.decimalPlaces = 2;
     }
 
-    public DecimalPlaces(int decimalPlaces, String message) {
+    public DecimalPlaces(int decimalPlaces) {
         this.decimalPlaces = decimalPlaces;
-        this.message = message;
     }
 
     public void setDecimalPlaces(int decimalPlaces) {
