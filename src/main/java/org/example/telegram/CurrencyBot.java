@@ -11,7 +11,9 @@ import org.example.settings.notification.NotificationMenu;
 import org.quartz.SchedulerException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,6 +60,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
 
         if (update.hasCallbackQuery()) {
             String callbackData = update.getCallbackQuery().getData();
+            int messageIdToDelete = update.getCallbackQuery().getMessage().getMessageId();
 
             Map<String, CallbackActions> callbackActions = dataStorage.getCallbackActions();
             Map<String, String> bankUrls = dataStorage.getBankUrls();
@@ -96,27 +99,47 @@ public class CurrencyBot extends TelegramLongPollingBot {
                 }
 
                 if (bankUrls.containsKey(callbackData)) {
+                    deleteMessage(chatID, messageIdToDelete);
+                    SendMessage newMessage = new SendMessage();
                     user.setBank(callbackData);
                     try {
                         bankURL.setBankURL(new URL(bankUrl));
-                        sendMessage(chatID, "Встановлено " + callbackData, message);
+                        buttons.bankButtons(newMessage, user);
+
+                        newMessage.setChatId(chatID);
+                        sendApiMethodAsync(newMessage);
                     } catch (MalformedURLException e) {
                         throw new RuntimeException(e);
                     }
                 }
 
                 if (data != null) {
+                    deleteMessage(chatID, messageIdToDelete);
+                    SendMessage newMessage = new SendMessage();
+
                     int newDecimalPlaces = Integer.parseInt(callbackData);
                     user.setDecimalPlaces(newDecimalPlaces);
                     decimalPlaces.setDecimalPlaces(newDecimalPlaces);
-                    sendMessage(chatID, "Встановлено " + decimalPlaces.getDecimalPlaces(), message);
+                    buttons.decimalPlacesButtons(newMessage, user);
+
+                    newMessage.setChatId(chatID);
+                    sendApiMethodAsync(newMessage);
                 }
 
                 if (selectedCurrency != null) {
+                    deleteMessage(chatID, messageIdToDelete);
+                    SendMessage newMessage = new SendMessage();
+
                     user.setCurrency(callbackData);
                     userCurrency.setCurrencyCode(selectedCurrency.getCurrencyCode(), selectedCurrency.getCurrencyName());
-                    sendMessage(chatID, "Встановлено " + selectedCurrency.getCurrencyName(), message);
+                    buttons.currencyButtons(newMessage, user);
+
+                    newMessage.setChatId(chatID);
+                    sendApiMethodAsync(newMessage);
                 }
+
+
+
                 if (update.getCallbackQuery().getData().equals("get_info")) {
                     try {
                         info.getCurrencyRate(message, chatID);
@@ -144,4 +167,16 @@ public class CurrencyBot extends TelegramLongPollingBot {
         message.setText(text);
         sendApiMethodAsync(message);
     }
+
+    public void deleteMessage(Long chatID, Integer messageId) {
+        DeleteMessage deleteMessage = new DeleteMessage();
+        deleteMessage.setChatId(chatID);
+        deleteMessage.setMessageId(messageId);
+        try {
+            execute(deleteMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
