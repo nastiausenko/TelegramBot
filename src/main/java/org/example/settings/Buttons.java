@@ -33,11 +33,8 @@ public class Buttons {
         buttons.add(List.of(createButton("Валюти", "currency", false)));
         buttons.add(List.of(createButton("Час сповіщень", "notification", false)));
 
-
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
-
         message.setReplyMarkup(markup);
-
     }
 
     public void decimalPlacesButtons(SendMessage message, User user) {
@@ -51,9 +48,8 @@ public class Buttons {
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
 
-        message.setText("Виберіть банк:");
+        message.setText("Виберіть кількість знаків після коми:");
         message.setReplyMarkup(markup);
-
     }
 
     public void bankButtons(SendMessage message, User user) {
@@ -66,7 +62,6 @@ public class Buttons {
 
         message.setText("Виберіть банк:");
         message.setReplyMarkup(markup);
-
     }
 
     public void currencyButtons(SendMessage message, User user) {
@@ -75,7 +70,6 @@ public class Buttons {
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(buttons).build();
         message.setReplyMarkup(markup);
-
     }
 
     private InlineKeyboardButton createButton(String text, String callbackData, boolean checked) {
