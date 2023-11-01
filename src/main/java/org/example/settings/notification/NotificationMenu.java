@@ -33,12 +33,18 @@ public class NotificationMenu {
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);
+
+        message.setText("Виберіть час сповіщень");
         message.setReplyMarkup(markup);
     }
 
     private InlineKeyboardButton createTimeButton(String time, int selectedTime) {
         InlineKeyboardButton button = new InlineKeyboardButton();
-        button.setText(time + (time.equals(Integer.toString(selectedTime)) ? " ✅" : ""));
+        if (time.equals("Вимкнути сповіщення") && selectedTime == 0) {
+            button.setText("✅ " + time);
+        } else {
+            button.setText(time + (time.equals(Integer.toString(selectedTime)) ? " ✅" : ""));
+        }
         button.setCallbackData(time);
         return button;
     }

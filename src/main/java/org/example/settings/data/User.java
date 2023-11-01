@@ -4,12 +4,18 @@ import lombok.Getter;
 
 @Getter
 public class User {
-    private int decimalPlaces = 2;
-    private String bank = "privatbank";
+    private int decimalPlaces;
+    private String bank;
     private String currency = "usd";
     @Getter
-    private int time = 9;
+    private int time;
 
+    public User(){
+        this.decimalPlaces = 2;
+        this.bank = "privatbank";
+        this.time = 9;
+        this.currency = "usd";
+    }
 
     public void setTime(Integer time) {
         this.time = time;

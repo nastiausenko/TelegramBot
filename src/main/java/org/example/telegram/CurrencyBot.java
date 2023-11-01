@@ -68,24 +68,31 @@ public class CurrencyBot extends TelegramLongPollingBot {
             Map<String, UserCurrency> currencies = dataStorage.getCurrencies();
 
             if (time.contains(callbackData)) {
+                deleteMessage(chatID, messageIdToDelete);
+                SendMessage newMessage = new SendMessage();
                 if (callbackData.equals("Вимкнути сповіщення")){
+                    user.setTime(0);
+                    menu.buildTimeMenu(newMessage, user);
+
                     try {
                         notification.Stop();
                     } catch (SchedulerException e) {
                         throw new RuntimeException(e);
                     }
-                    sendMessage(chatID, "Сповіщення вимкнено", message);
                 } else {
                     int selectedTime = Integer.parseInt(callbackData);
                     user.setTime(selectedTime);
-                    sendMessage(chatID, "Час сповіщень встановлено на " + callbackData, message);
+                    menu.buildTimeMenu(newMessage, user);
+
                     try {
-                        notification.Start(Integer.parseInt(callbackData));
+                        notification.Start(selectedTime);
                     } catch (SchedulerException e) {
                         throw new RuntimeException(e);
                     }
 
                 }
+                newMessage.setChatId(chatID);
+                sendApiMethodAsync(newMessage);
             }
 
             if (update.getCallbackQuery() != null) {

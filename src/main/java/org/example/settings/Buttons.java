@@ -68,7 +68,7 @@ public class Buttons {
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(bankButtons).build();
 
-        message.setText("Виберіть банк:");
+        message.setText("Виберіть банк");
         message.setReplyMarkup(markup);
     }
 
