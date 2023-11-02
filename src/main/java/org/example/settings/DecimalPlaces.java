@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public class DecimalPlaces {
     private int decimalPlaces;
-    private String message;
 
     public DecimalPlaces() {
         this.decimalPlaces = 2;

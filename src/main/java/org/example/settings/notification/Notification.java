@@ -49,6 +49,6 @@ public class Notification {
             }
         };
 
-        scheduler.scheduleAtFixedRate(checker, 0, 1, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(checker, 0, 1, TimeUnit.SECONDS);
     }
 }

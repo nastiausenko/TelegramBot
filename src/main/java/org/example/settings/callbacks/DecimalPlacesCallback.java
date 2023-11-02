@@ -1,7 +1,6 @@
 package org.example.settings.callbacks;
 
 import org.example.settings.Buttons;
-import org.example.settings.DecimalPlaces;
 import org.example.settings.data.User;
 import org.example.telegram.CurrencyBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

@@ -12,11 +12,11 @@ import java.util.List;
 public class Buttons {
 
     private static final String WELCOME_MESSAGE = "Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют";
-    List<List<InlineKeyboardButton>> settingsButtons = new ArrayList<>();
-    List<List<InlineKeyboardButton>> startButtons = new ArrayList<>();
-    List<List<InlineKeyboardButton>> decimalButtons = new ArrayList<>();
-    List<List<InlineKeyboardButton>> bankButtons = new ArrayList<>();
-    List<List<InlineKeyboardButton>> currencyButtons = new ArrayList<>();
+    private List<List<InlineKeyboardButton>> settingsButtons = new ArrayList<>();
+    private List<List<InlineKeyboardButton>> startButtons = new ArrayList<>();
+    private List<List<InlineKeyboardButton>> decimalButtons = new ArrayList<>();
+    private List<List<InlineKeyboardButton>> bankButtons = new ArrayList<>();
+    private List<List<InlineKeyboardButton>> currencyButtons = new ArrayList<>();
 
 
 
