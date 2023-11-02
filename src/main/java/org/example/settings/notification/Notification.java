@@ -33,7 +33,7 @@ public class Notification {
     public void start(CurrencyBot bot) {
         final Runnable checker = () -> {
             LocalTime time = LocalTime.now();
-            int now = time.getMinute();
+            int now = time.getHour();
 
             if (now == user.getTime()) {
                 Long chatId = user.getChadId();
@@ -49,6 +49,6 @@ public class Notification {
             }
         };
 
-        scheduler.scheduleAtFixedRate(checker, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(checker, 0, 1, TimeUnit.HOURS);
     }
 }
