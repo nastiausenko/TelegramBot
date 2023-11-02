@@ -6,7 +6,7 @@ import lombok.Getter;
 public class User {
     private int decimalPlaces;
     private String bank;
-    private String currency = "usd";
+    private String currency;
     @Getter
     private int time;
 

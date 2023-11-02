@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
     BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
     User user = new User();
+    List<UserCurrency> selectedCurrencies = new ArrayList<>(2);
     CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces, this);
     private Notification notification;
     public CurrencyBot() throws MalformedURLException, SchedulerException {
@@ -134,11 +136,27 @@ public class CurrencyBot extends TelegramLongPollingBot {
                 }
 
                 if (selectedCurrency != null) {
+                    SendMessage text = new SendMessage();
+                    if (selectedCurrencies.contains(selectedCurrency)){
+                        selectedCurrencies.remove(selectedCurrency);
+                        sendMessage(chatID, "Видалено " + callbackData, text);//testing
+                    } else {
+                        selectedCurrencies.add(selectedCurrency);
+                        sendMessage(chatID, "Вибрано " + callbackData, text);//testing
+                    }
+
+                    if (selectedCurrencies.isEmpty()) {
+                        sendMessage(chatID, "Виберіть валюту", text);//testing
+                    }
+
                     deleteMessage(chatID, messageIdToDelete);
                     SendMessage newMessage = new SendMessage();
 
                     user.setCurrency(callbackData);
-                    userCurrency.setCurrencyCode(selectedCurrency.getCurrencyCode(), selectedCurrency.getCurrencyName());
+                    userCurrency.setCurrencies(selectedCurrencies);
+                    for (UserCurrency currency : selectedCurrencies) {
+                        userCurrency.setCurrencyCode(currency.getCurrencyCode(), currency.getCurrencyName());
+                    }
                     buttons.currencyButtons(newMessage, user);
 
                     newMessage.setChatId(chatID);
