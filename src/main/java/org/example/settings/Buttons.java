@@ -74,11 +74,19 @@ public class Buttons {
 
     public void currencyButtons(SendMessage message, User user) {
         currencyButtons.clear();
-        currencyButtons.add(List.of(createButton("EUR", "eur", "eur".equals(user.getCurrency()))));
-        currencyButtons.add(List.of(createButton("USD", "usd", "usd".equals(user.getCurrency()))));
+        List<UserCurrency> selectedCurrencies = user.getCurrencies();
+        List<String> allCurrencyNames = new ArrayList<>();
+        allCurrencyNames.add("USD");
+        allCurrencyNames.add("EUR");
+
+        for (String currencyName : allCurrencyNames) {
+            boolean checked = selectedCurrencies.stream()
+                    .anyMatch(currency -> currency.getCurrencyName().equals(currencyName));
+
+            currencyButtons.add(List.of(createButton(currencyName, currencyName.toLowerCase(), checked)));
+        }
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(currencyButtons).build();
-
         message.setText("Виберіть валюту:");
         message.setReplyMarkup(markup);
     }
@@ -96,6 +104,4 @@ public class Buttons {
 
         return button;
     }
-
-
 }

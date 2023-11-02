@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class CurrencyInfo {
     private UserCurrency userCurrency;
@@ -48,6 +49,8 @@ public class CurrencyInfo {
             JSONArray currencyRates = new JSONArray(result.toString());
             Bank bank;
 
+            List<UserCurrency> currencies = userCurrency.getCurrencies();
+
             if (bankURL.isMonobank()) {
                 bank = new Monobank();
             } else if (bankURL.isPrivatbank()) {
@@ -56,8 +59,15 @@ public class CurrencyInfo {
                 bank = new NBU();
             }
 
-            bank.processCurrencyData(currencyRates, message, userCurrency, decimalPlaces);
-            bot.sendMessage(chatID, message.getText(), message);
+            if (currencies == null){
+                bank.processCurrencyData(currencyRates, message, userCurrency, decimalPlaces);
+                bot.sendMessage(chatID, message.getText(), message);
+            } else {
+                for (UserCurrency currency : currencies) {
+                    bank.processCurrencyData(currencyRates, message, currency, decimalPlaces);
+                    bot.sendMessage(chatID, message.getText(), message);
+                }
+            }
         }
     }
 }

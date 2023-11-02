@@ -59,69 +59,69 @@ public class Notification {
 
         Trigger trigger1 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail1, trigger1);
 
 
         Trigger trigger2 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger1", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail2, trigger2);
 
 
         Trigger trigger3 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger2", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail3, trigger3);
 
 
         Trigger trigger4 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger3", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail4, trigger4);
 
 
         Trigger trigger5 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger4", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail5, trigger5);
 
 
         Trigger trigger6 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger5", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail6, trigger6);
 
 
         Trigger trigger7 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger6", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail7, trigger7);
 
 
         Trigger trigger8 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger7", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail8, trigger8);
 
 
         Trigger trigger9 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger8", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail9, trigger9);
 
         Trigger trigger10 = TriggerBuilder.newTrigger()
                 .withIdentity("trigger9", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 44))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
                 .build();
         scheduler.scheduleJob(jobDetail10, trigger10);
 

@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,10 @@ public class CurrencyBot extends TelegramLongPollingBot {
     BankURL bankURL = new BankURL();
     DecimalPlaces decimalPlaces = new DecimalPlaces();
     User user = new User();
+    List<UserCurrency> selectedCurrencies = new ArrayList<>(2);
     CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces, this);
     private Notification notification;
+
     public CurrencyBot() throws MalformedURLException, SchedulerException {
         bankURL.setBankURL(new URL("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"));
         notification = new Notification();
@@ -134,17 +137,33 @@ public class CurrencyBot extends TelegramLongPollingBot {
                 }
 
                 if (selectedCurrency != null) {
+                    if (selectedCurrencies.contains(selectedCurrency)){
+                        selectedCurrencies.remove(selectedCurrency);
+                    } else {
+                        selectedCurrencies.add(selectedCurrency);
+                    }
                     deleteMessage(chatID, messageIdToDelete);
                     SendMessage newMessage = new SendMessage();
 
                     user.setCurrency(callbackData);
-                    userCurrency.setCurrencyCode(selectedCurrency.getCurrencyCode(), selectedCurrency.getCurrencyName());
+                    user.setCurrencies(selectedCurrencies);
+                    userCurrency.setCurrencies(selectedCurrencies);
+                    for (UserCurrency currency : selectedCurrencies) {
+                        userCurrency.setCurrencyCode(currency.getCurrencyCode(), currency.getCurrencyName());
+                    }
                     buttons.currencyButtons(newMessage, user);
+                    SendMessage warningMessage = new SendMessage();
+
+                    if (selectedCurrencies.isEmpty()) {
+                        warningMessage.setText("Будь ласка, виберіть валюту");
+                    }
 
                     newMessage.setChatId(chatID);
                     sendApiMethodAsync(newMessage);
-                }
 
+                    warningMessage.setChatId(chatID);
+                    sendApiMethodAsync(warningMessage);
+                }
 
 
                 if (update.getCallbackQuery().getData().equals("get_info")) {
