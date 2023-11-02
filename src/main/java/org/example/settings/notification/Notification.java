@@ -1,134 +1,54 @@
 package org.example.settings.notification;
 
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
+import org.apache.http.ParseException;
+import org.example.information.CurrencyInfo;
+import org.example.settings.BankURL;
+import org.example.settings.DecimalPlaces;
+import org.example.settings.UserCurrency;
+import org.example.settings.data.User;
+import org.example.telegram.CurrencyBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.io.IOException;
+import java.time.LocalTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Notification {
-    private Scheduler scheduler;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final BankURL bankURL;
+    private final DecimalPlaces decimalPlaces;
+    private final UserCurrency currency;
+    private final User user;
 
-    public Notification() throws SchedulerException {
-        scheduler = StdSchedulerFactory.getDefaultScheduler();
+    public Notification(BankURL bankURL, DecimalPlaces decimalPlaces, UserCurrency currency, User user) {
+        this.bankURL = bankURL;
+        this.decimalPlaces = decimalPlaces;
+        this.currency = currency;
+        this.user = user;
     }
 
-    public void Start(int notificationHour) throws SchedulerException {
-        String group = "group1";
+    public void start(CurrencyBot bot) {
+        final Runnable checker = () -> {
+            LocalTime time = LocalTime.now();
+            int now = time.getMinute();
 
-        scheduler.deleteJob(JobKey.jobKey("myJob", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob1", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob2", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob3", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob4", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob5", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob6", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob7", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob8", group));
-        scheduler.deleteJob(JobKey.jobKey("myJob9", group));
+            if (now == user.getTime()) {
+                Long chatId = user.getChadId();
+                SendMessage message = new SendMessage();
+                message.setChatId(chatId);
 
+                try {
+                    CurrencyInfo currencyInfo = new CurrencyInfo(currency, bankURL, decimalPlaces, bot);
+                    bot.execute(currencyInfo.getCurrencyRate(message, chatId));
+                } catch (TelegramApiException | IOException | ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
 
-        JobDetail jobDetail1 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob", group)
-                .build();
-        JobDetail jobDetail2 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob1", group)
-                .build();
-        JobDetail jobDetail3 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob2", group)
-                .build();
-        JobDetail jobDetail4 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob3", group)
-                .build();
-        JobDetail jobDetail5 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob4", group)
-                .build();
-        JobDetail jobDetail6 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob5", group)
-                .build();
-        JobDetail jobDetail7 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob6", group)
-                .build();
-        JobDetail jobDetail8 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob7", group)
-                .build();
-        JobDetail jobDetail9 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob8", group)
-                .build();
-        JobDetail jobDetail10 = JobBuilder.newJob(NotificationSchedule.class)
-                .withIdentity("myJob9", group)
-                .build();
-
-
-        Trigger trigger1 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail1, trigger1);
-
-
-        Trigger trigger2 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger1", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail2, trigger2);
-
-
-        Trigger trigger3 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger2", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail3, trigger3);
-
-
-        Trigger trigger4 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger3", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail4, trigger4);
-
-
-        Trigger trigger5 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger4", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail5, trigger5);
-
-
-        Trigger trigger6 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger5", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail6, trigger6);
-
-
-        Trigger trigger7 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger6", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail7, trigger7);
-
-
-        Trigger trigger8 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger7", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail8, trigger8);
-
-
-        Trigger trigger9 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger8", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail9, trigger9);
-
-        Trigger trigger10 = TriggerBuilder.newTrigger()
-                .withIdentity("trigger9", group)
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(notificationHour, 0))
-                .build();
-        scheduler.scheduleJob(jobDetail10, trigger10);
-
-        scheduler.start();
-    }
-
-    public void Stop() throws SchedulerException {
-        scheduler.clear();
+        scheduler.scheduleAtFixedRate(checker, 0, 1, TimeUnit.MINUTES);
     }
 }

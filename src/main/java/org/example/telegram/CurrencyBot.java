@@ -33,11 +33,12 @@ public class CurrencyBot extends TelegramLongPollingBot {
     User user = new User();
     List<UserCurrency> selectedCurrencies = new ArrayList<>(2);
     CurrencyInfo info = new CurrencyInfo(userCurrency, bankURL, decimalPlaces, this);
-    private Notification notification;
+    Notification notification;
 
     public CurrencyBot() throws MalformedURLException, SchedulerException {
         bankURL.setBankURL(new URL("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"));
-        notification = new Notification();
+        notification = new Notification(bankURL, decimalPlaces, userCurrency, user);
+        notification.start(this);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Long chatID = getChatId(update);
+        user.setChadId(chatID);
         SendMessage message = new SendMessage();
 
         if (update.hasMessage() && update.getMessage().getText().equals("/start")) {
@@ -76,23 +78,10 @@ public class CurrencyBot extends TelegramLongPollingBot {
                 if (callbackData.equals("Вимкнути сповіщення")){
                     user.setTime(0);
                     menu.buildTimeMenu(newMessage, user);
-
-                    try {
-                        notification.Stop();
-                    } catch (SchedulerException e) {
-                        throw new RuntimeException(e);
-                    }
                 } else {
                     int selectedTime = Integer.parseInt(callbackData);
                     user.setTime(selectedTime);
                     menu.buildTimeMenu(newMessage, user);
-
-                    try {
-                        notification.Start(selectedTime);
-                    } catch (SchedulerException e) {
-                        throw new RuntimeException(e);
-                    }
-
                 }
                 newMessage.setChatId(chatID);
                 sendApiMethodAsync(newMessage);
