@@ -1,6 +1,7 @@
 package org.example.telegram;
 
 import org.apache.http.ParseException;
+import org.example.settings.data.AppConstants;
 import org.example.information.CurrencyInfo;
 import org.example.settings.*;
 import org.example.settings.callbacks.*;
@@ -36,7 +37,7 @@ public class CurrencyBot extends TelegramLongPollingBot {
     Notification notification;
 
     public CurrencyBot() throws MalformedURLException, SchedulerException {
-        bankURL.setBankURL(new URL("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"));
+        bankURL.setBankURL(new URL(AppConstants.PRIVAT_URI));
         notification = new Notification(bankURL, decimalPlaces, userCurrency, user);
         notification.start(this);
     }
