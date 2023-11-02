@@ -59,9 +59,14 @@ public class CurrencyInfo {
                 bank = new NBU();
             }
 
-            for (UserCurrency currency: currencies) {
-                bank.processCurrencyData(currencyRates, message, currency, decimalPlaces);
+            if (currencies == null){
+                bank.processCurrencyData(currencyRates, message, userCurrency, decimalPlaces);
                 bot.sendMessage(chatID, message.getText(), message);
+            } else {
+                for (UserCurrency currency : currencies) {
+                    bank.processCurrencyData(currencyRates, message, currency, decimalPlaces);
+                    bot.sendMessage(chatID, message.getText(), message);
+                }
             }
         }
     }
