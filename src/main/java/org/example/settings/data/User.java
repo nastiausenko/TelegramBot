@@ -1,6 +1,10 @@
 package org.example.settings.data;
 
 import lombok.Getter;
+import org.example.settings.UserCurrency;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class User {
@@ -9,12 +13,15 @@ public class User {
     private String currency;
     @Getter
     private int time;
+    @Getter
+    private List<UserCurrency> currencies;
 
     public User(){
         this.decimalPlaces = 2;
         this.bank = "privatbank";
         this.time = 9;
         this.currency = "usd";
+        this.currencies = new ArrayList<>();
     }
 
     public void setTime(Integer time) {
@@ -31,5 +38,9 @@ public class User {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public void setCurrencies(List<UserCurrency> currencies) {
+        this.currencies = currencies;
     }
 }
