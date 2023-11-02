@@ -15,6 +15,7 @@ public class User {
     private int time;
     @Getter
     private List<UserCurrency> currencies;
+    private Long chadId;
 
     public User(){
         this.decimalPlaces = 2;
@@ -24,7 +25,7 @@ public class User {
         this.currencies = new ArrayList<>();
     }
 
-    public void setTime(Integer time) {
+    public void setTime(int time) {
         this.time = time;
     }
 
@@ -42,5 +43,8 @@ public class User {
 
     public void setCurrencies(List<UserCurrency> currencies) {
         this.currencies = currencies;
+    }
+    public void setChadId(Long chadId) {
+        this.chadId = chadId;
     }
 }

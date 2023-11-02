@@ -10,6 +10,7 @@ import org.example.settings.DecimalPlaces;
 import org.example.settings.UserCurrency;
 import org.example.telegram.CurrencyBot;
 import org.json.JSONArray;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.io.BufferedReader;
@@ -32,11 +33,12 @@ public class CurrencyInfo {
         this.bot = bot;
     }
 
-    public void getCurrencyRate(SendMessage message, Long chatID)
+    public SendDocument getCurrencyRate(SendMessage message, Long chatID)
             throws IOException, ParseException {
         URL url = bankURL.getBankURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
+        SendDocument document = new SendDocument();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             StringBuilder result = new StringBuilder();
@@ -50,6 +52,7 @@ public class CurrencyInfo {
             Bank bank;
 
             List<UserCurrency> currencies = userCurrency.getCurrencies();
+
 
             if (bankURL.isMonobank()) {
                 bank = new Monobank();
@@ -69,5 +72,6 @@ public class CurrencyInfo {
                 }
             }
         }
+        return document;
     }
 }
