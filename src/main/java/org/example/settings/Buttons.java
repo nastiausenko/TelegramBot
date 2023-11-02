@@ -76,14 +76,14 @@ public class Buttons {
         currencyButtons.clear();
         List<UserCurrency> selectedCurrencies = user.getCurrencies();
         List<String> allCurrencyNames = new ArrayList<>();
-        allCurrencyNames.add("usd");
-        allCurrencyNames.add("eur");
+        allCurrencyNames.add("USD");
+        allCurrencyNames.add("EUR");
 
         for (String currencyName : allCurrencyNames) {
             boolean checked = selectedCurrencies.stream()
-                    .anyMatch(currency -> currency.getCurrencyName().equals(currencyName.toUpperCase()));
+                    .anyMatch(currency -> currency.getCurrencyName().equals(currencyName));
 
-            currencyButtons.add(List.of(createButton(currencyName, currencyName, checked)));
+            currencyButtons.add(List.of(createButton(currencyName, currencyName.toLowerCase(), checked)));
         }
 
         InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(currencyButtons).build();
